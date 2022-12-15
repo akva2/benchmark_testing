@@ -4,22 +4,6 @@
 #include <iostream>
 #include <string>
 
-// struct PalanteerTimer {
-//     PalanteerTimer(const std::string& blockname)
-//         : m_blockname(blockname)
-//     {
-//         plBegin(blockname.c_str());
-//     }
-
-//    ~PalanteerTimer()
-//    {
-//        plEnd(m_blockname.c_str()); // Technically not needed to give the name, but better safe than sorry.
-//    }
-
-// private:
-//     const std::string m_blockname;
-// };
-
 #define PROGRAM_TIME_BLOCK(blockname) plScope(#blockname)
 
 struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
