@@ -7,6 +7,8 @@
 #include "timers/easy.hpp"
 #elif PROGRAM_USE_REMOTERY
 #include "timers/remotery.hpp"
+#elif PROGRAM_USE_PALANTEER
+#include "timers/palanteer.hpp"
 #else
 #include "timers/none.hpp"
 #endif

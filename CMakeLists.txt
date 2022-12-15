@@ -13,6 +13,8 @@ include(FetchContent)
 set(PROGRAM_USE_EASY_PROFILER OFF)
 set(PROGRAM_USE_TRACY OFF)
 set(PROGRAM_USE_REMOTERY OFF)
+set(PROGRAM_USE_PALANTEER OFF)
+
 if ("${PROGRAM_TIMER_BACKEND}" STREQUAL "EASY_PROFILER")
     set(PROGRAM_USE_EASY_PROFILER ON)
 
@@ -31,7 +33,6 @@ elseif ("${PROGRAM_TIMER_BACKEND}" STREQUAL "TRACY")
     )
     FetchContent_MakeAvailable ( tracy )
     target_link_libraries(program::TimerLibrary INTERFACE TracyClient)
-
 elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "REMOTERY")
     set(PROGRAM_USE_REMOTERY ON)
     find_package(Threads REQUIRED)
@@ -48,6 +49,26 @@ elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "REMOTERY")
       target_include_directories(remotery_lib PUBLIC "${remotery_SOURCE_DIR}/lib")
       target_link_libraries(program::TimerLibrary INTERFACE remotery_lib)
     endif()
+elseif ("${PROGRAM_TIMER_BACKEND}" STREQUAL "PALANTEER")
+    set(PROGRAM_USE_PALANTEER ON)
+    find_package(Threads REQUIRED)
+    FetchContent_Declare (
+      palanteer
+      GIT_REPOSITORY https://github.com/dfeneyrou/palanteer.git
+      GIT_TAG main
+      GIT_SHALLOW TRUE
+      GIT_PROGRESS TRUE
+    )
+
+
+    FetchContent_GetProperties(palanteer)
+    if(NOT palanteer_POPULATED)
+      FetchContent_Populate(palanteer)
+      add_library(palanteer_lib INTERFACE)
+      target_include_directories(palanteer_lib INTERFACE "${palanteer_SOURCE_DIR}/c++")
+      target_link_libraries(program::TimerLibrary INTERFACE palanteer_lib Threads::Threads)
+      target_compile_definitions(program::TimerLibrary INTERFACE -DUSE_PL=1)
+    endif()
 elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "NONE")
     set(PROGRAM_USE_EASY_PROFILER OFF)
     set(PROGRAM_USE_TRACY OFF)
@@ -60,6 +81,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/config.hpp ESCAPE_QUOTES)
 
 # Adding all headers to be nice to IDEs (eg QtCreator)
-add_executable(simulator src/main.cpp src/timers.hpp src/timers/easy.hpp src/timers/none.hpp src/timers/tracy.hpp src/timers/remotery.hpp)
+add_executable(simulator src/main.cpp src/timers.hpp src/timers/easy.hpp src/timers/palanteer.hpp src/timers/none.hpp src/timers/tracy.hpp src/timers/remotery.hpp)
 target_link_libraries(simulator program::TimerLibrary)
 target_include_directories(simulator PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include/)

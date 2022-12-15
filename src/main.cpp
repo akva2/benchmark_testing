@@ -2,6 +2,7 @@
 #include <array>
 #include <cstdlib>
 #include <iostream>
+#include <limits>
 #include <unistd.h>
 
 int
@@ -24,6 +25,22 @@ main()
         }
     }
 
+    {
+        PROGRAM_TIME_BLOCK(HeavyComputation);
+        std::cout << "calculating e" << std::endl;
+        using int_type = int;
+        const int_type N = std::numeric_limits<int_type>::max();
+
+        // Compute e with insane precision that will anyway be lost
+        // due to rounding
+        double e = 1.0;
+
+        for (int_type i = 0u; i < N; ++i) {
+            e += 1.0 / (double(N) - 1) * e;
+        }
+
+        std::cout << "e = " << e << std::endl;
+    }
     {
         PROGRAM_TIME_BLOCK(SixSeconds);
         for (auto& pointer : pointers) {
