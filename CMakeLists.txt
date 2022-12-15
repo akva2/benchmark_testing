@@ -1,5 +1,5 @@
-project(HelloWorld)
-cmake_minimum_required(VERSION 3.0)
+project(BenchmarkedSimulator)
+cmake_minimum_required(VERSION 3.11)
 set(PROGRAM_TIMER_BACKEND "NONE" CACHE STRING "The timer backend to use. Available options: NONE, EASY_PROFILER, TRACY, REMOTERY.")
 
 
@@ -14,7 +14,7 @@ set(PROGRAM_USE_EASY_PROFILER OFF)
 set(PROGRAM_USE_TRACY OFF)
 set(PROGRAM_USE_REMOTERY OFF)
 set(PROGRAM_USE_PALANTEER OFF)
-
+set(PROGRAM_USE_MICROPROFILE OFF)
 if ("${PROGRAM_TIMER_BACKEND}" STREQUAL "EASY_PROFILER")
     set(PROGRAM_USE_EASY_PROFILER ON)
 
@@ -103,17 +103,29 @@ elseif ("${PROGRAM_TIMER_BACKEND}" STREQUAL "PALANTEER")
       target_compile_definitions(program::TimerLibrary INTERFACE -DUSE_PL=1)
     endif()
 elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "NONE")
+    # Probably do not need to repeat this here. Doing it for peace of mind.
     set(PROGRAM_USE_EASY_PROFILER OFF)
     set(PROGRAM_USE_TRACY OFF)
     set(PROGRAM_USE_REMOTERY OFF)
+    set(PROGRAM_USE_PALANTEER OFF)
+    set(PROGRAM_USE_MICROPROFILE OFF)
 else()
-     message( FATAL_ERROR "Unknown PROGRAM_TIMER_BACKEND. Given ${PROGRAM_TIMER_BACKEND}.\nSupported:\n\t- NONE\n\t- EASY_PROFILER\n\t- TRACY" )
+     message( FATAL_ERROR "Unknown PROGRAM_TIMER_BACKEND. Given ${PROGRAM_TIMER_BACKEND}.\nSupported:\n\t- NONE\n\t- EASY_PROFILER\n\t- TRACY\n\t-REMOTERY\n\t- PALANTEER" )
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/config.hpp ESCAPE_QUOTES)
 
 # Adding all headers to be nice to IDEs (eg QtCreator)
-add_executable(simulator src/main.cpp src/timers.hpp src/timers/easy.hpp src/timers/microprofile.hpp src/timers/palanteer.hpp src/timers/none.hpp src/timers/tracy.hpp src/timers/remotery.hpp)
+add_executable(simulator
+    src/main.cpp
+    src/timers.hpp
+    src/timers/easy.hpp
+    src/timers/microprofile.hpp
+    src/timers/palanteer.hpp
+    src/timers/none.hpp
+    src/timers/tracy.hpp
+    src/timers/remotery.hpp)
+
 target_link_libraries(simulator program::TimerLibrary)
 target_include_directories(simulator PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include/)
