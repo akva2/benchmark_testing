@@ -6,8 +6,8 @@
 
 #define PROGRAM_TIME_BLOCK(blockname) plScope(#blockname)
 
-struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
-    ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+struct ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram {
+    ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
         std::cout << "Creating palanteer instance" << std::endl;
         plInitAndStart("simulator"); // Start the instrumentation, for the program named "example"
@@ -15,7 +15,7 @@ struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
             "Main"); // Declare the current thread as "Main" so that it can be identified more easily in the script
     }
 
-    ~ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+    ~ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
         std::cout << "Destroying palanteer instance" << std::endl;
         plStopAndUninit();

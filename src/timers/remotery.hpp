@@ -5,8 +5,8 @@
 
 #define PROGRAM_TIME_BLOCK(blockname) rmt_ScopedCPUSample(blockname, 0);
 
-struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
-    ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+struct ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram {
+    ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
         std::cout << "Creating remotery instance" << std::endl;
         const auto error = rmt_CreateGlobalInstance(&m_rmt);
@@ -16,7 +16,7 @@ struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
         }
     }
 
-    ~ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+    ~ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
         std::cout << "Destroying remotery instance" << std::endl;
         rmt_CreateGlobalInstance(&m_rmt);

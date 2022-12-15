@@ -8,7 +8,7 @@
 int
 main()
 {
-    ProgramTimerBackendToBeInstantiateAtBeginningOfProgram timer_backend;
+    ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram timer_backend;
     size_t N = 1024 * 1024;
     std::array<int*, 1000> pointers;
     {

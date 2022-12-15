@@ -6,12 +6,12 @@ do {                                                                         \
 } while (false)
 
 
-    struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
-    ProgramTimerBackendToBeInstantiateAtBeginningOfProgram() {
+    struct ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram {
+    ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram() {
         // Does nothing
     }
 
-    ~ProgramTimerBackendToBeInstantiateAtBeginningOfProgram() {
+    ~ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram() {
         // Does nothing
     }
 };

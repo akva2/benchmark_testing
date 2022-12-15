@@ -7,13 +7,13 @@
 #endif
 #include <string>
 
-struct ProgramTimerBackendToBeInstantiateAtBeginningOfProgram {
-    ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+struct ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram {
+    ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
         EASY_PROFILER_ENABLE;
     }
 
-    ~ProgramTimerBackendToBeInstantiateAtBeginningOfProgram()
+    ~ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram()
     {
 #if PROGRAM_HAVE_MPI
         // Here we set the filename based on the MPI process
