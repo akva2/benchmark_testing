@@ -1,0 +1,6 @@
+#pragma once // Yes, I know about the core guidelines not recommending this
+
+#cmakedefine PROGRAM_USE_TRACY 1
+#cmakedefine PROGRAM_USE_EASY_PROFILER 1
+#cmakedefine PROGRAM_USE_REMOTERY 1
+#cmakedefine PROGRAM_HAVE_MPI 1
