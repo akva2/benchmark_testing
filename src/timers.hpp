@@ -9,6 +9,8 @@
 #include "timers/remotery.hpp"
 #elif PROGRAM_USE_PALANTEER
 #include "timers/palanteer.hpp"
+#elif PRORGRAM_USE_MICROPROFILE
+#include "timers/microprofile.hpp"
 #else
 #include "timers/none.hpp"
 #endif

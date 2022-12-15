@@ -33,6 +33,39 @@ elseif ("${PROGRAM_TIMER_BACKEND}" STREQUAL "TRACY")
     )
     FetchContent_MakeAvailable ( tracy )
     target_link_libraries(program::TimerLibrary INTERFACE TracyClient)
+elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "MICROPROFILE")
+    set(PROGRAM_USE_MICROPROFILE ON)
+
+    # First we need STB for some reason
+    FetchContent_Declare (
+      stb
+      GIT_REPOSITORY https://github.com/nothings/stb.git
+      GIT_TAG master
+      GIT_SHALLOW TRUE
+      GIT_PROGRESS TRUE
+    )
+
+    FetchContent_GetProperties(stb)
+    if(NOT stb_POPULATED)
+      FetchContent_Populate(stb)
+      add_library(stb_lib INTERFACE)
+      target_include_directories(stb_lib INTERFACE "${stb_SOURCE_DIR}")
+    endif()
+    find_package(Threads REQUIRED)
+    FetchContent_Declare (
+      microprofile
+      URL "https://github.com/jonasmr/microprofile/archive/refs/tags/v4.0.zip"
+    )
+
+    FetchContent_GetProperties(microprofile)
+    if(NOT microprofile_POPULATED)
+      FetchContent_Populate(microprofile)
+      add_library(microprofile_lib "${microprofile_SOURCE_DIR}/microprofile.cpp")
+      target_compile_definitions(microprofile_lib PUBLIC -DMICROPROFILE_SYSTEM_STB=1)
+      target_link_libraries(microprofile_lib PUBLIC Threads::Threads stb_lib)
+      target_include_directories(microprofile_lib PUBLIC "${microprofile_SOURCE_DIR}")
+      target_link_libraries(program::TimerLibrary INTERFACE microprofile_lib)
+    endif()
 elseif("${PROGRAM_TIMER_BACKEND}" STREQUAL "REMOTERY")
     set(PROGRAM_USE_REMOTERY ON)
     find_package(Threads REQUIRED)
@@ -81,6 +114,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/config.hpp ESCAPE_QUOTES)
 
 # Adding all headers to be nice to IDEs (eg QtCreator)
-add_executable(simulator src/main.cpp src/timers.hpp src/timers/easy.hpp src/timers/palanteer.hpp src/timers/none.hpp src/timers/tracy.hpp src/timers/remotery.hpp)
+add_executable(simulator src/main.cpp src/timers.hpp src/timers/easy.hpp src/timers/microprofile.hpp src/timers/palanteer.hpp src/timers/none.hpp src/timers/tracy.hpp src/timers/remotery.hpp)
 target_link_libraries(simulator program::TimerLibrary)
 target_include_directories(simulator PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include/)

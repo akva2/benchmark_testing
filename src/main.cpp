@@ -9,8 +9,9 @@ int
 main()
 {
     ProgramTimerBackendToBeInstantiatedAtBeginningOfProgram timer_backend;
-    size_t N = 1024 * 1024;
+    const size_t memory_to_allocate = 1024 * 1024;
     std::array<int*, 1000> pointers;
+    PROGRAM_TIME_BLOCK(WholeProgram);
     {
         std::cout << "sleeping for 10 seconds" << std::endl;
         PROGRAM_TIME_BLOCK(TenSeconds);
@@ -21,7 +22,7 @@ main()
         std::cout << "sleeping for 30 seconds" << std::endl;
         sleep(30);
         for (auto& pointer : pointers) {
-            pointer = (int*)malloc(N * sizeof(int));
+            pointer = (int*)malloc(memory_to_allocate * sizeof(int));
         }
     }
 
@@ -44,7 +45,7 @@ main()
     {
         PROGRAM_TIME_BLOCK(SixSeconds);
         for (auto& pointer : pointers) {
-            for (size_t i = 0; i < N; ++i) {
+            for (size_t i = 0; i < memory_to_allocate; ++i) {
                 pointer[i] = 43.4 + i;
             }
         }
