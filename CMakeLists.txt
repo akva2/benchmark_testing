@@ -127,5 +127,7 @@ add_executable(simulator
     src/timers/tracy.hpp
     src/timers/remotery.hpp)
 
-target_link_libraries(simulator program::TimerLibrary)
+find_package(OpenMP REQUIRED)
+
+target_link_libraries(simulator program::TimerLibrary OpenMP::OpenMP_CXX)
 target_include_directories(simulator PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/include/)

@@ -15,12 +15,12 @@ main()
     {
         std::cout << "sleeping for 10 seconds" << std::endl;
         PROGRAM_TIME_BLOCK(TenSeconds);
-        sleep(10);
+//        sleep(10);
     }
     {
         PROGRAM_TIME_BLOCK(ThirtySeconds);
         std::cout << "sleeping for 30 seconds" << std::endl;
-        sleep(30);
+  //      sleep(30);
         for (auto& pointer : pointers) {
             pointer = (int*)malloc(memory_to_allocate * sizeof(int));
         }
@@ -29,15 +29,16 @@ main()
     {
         PROGRAM_TIME_BLOCK(HeavyComputation);
         std::cout << "calculating e" << std::endl;
-        using int_type = int;
-        const int_type N = std::numeric_limits<int_type>::max();
+        using int_type = long;
+        const int_type N = 1l << 38;
 
         // Compute e with insane precision that will anyway be lost
         // due to rounding
-        double e = 1.0;
+        double e = 0.0;
 
-        for (int_type i = 0u; i < N; ++i) {
-            e += 1.0 / (double(N) - 1) * e;
+#pragma omp parallel for schedule(static) reduction(+:e)
+        for (int_type i = 1u; i < N; ++i) {
+            e += 1.0 / (double(i)*double(i));
         }
 
         std::cout << "e = " << e << std::endl;
